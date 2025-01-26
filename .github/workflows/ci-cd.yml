@@ -33,6 +33,9 @@ jobs:
       - name: Install Yarn globally (Android)
         run: npm install -g yarn
 
+      - name: Install Expo CLI globally (Android)
+        run: npm install -g expo-cli
+
       - name: Install Android SDK and dependencies (Android)
         run: |
           sudo apt-get update
@@ -76,8 +79,8 @@ jobs:
       - name: Run Android tests
         run: yarn test
 
-      - name: Build Android app
-        run: yarn android
+      - name: Build Android app with Expo
+        run: expo run:android
 
   # Job for linting, testing, and building iOS app
   ios:
@@ -103,6 +106,9 @@ jobs:
       - name: Install Yarn globally (iOS)
         run: npm install -g yarn
 
+      - name: Install Expo CLI globally (iOS)
+        run: npm install -g expo-cli
+
       - name: Install dependencies (iOS)
         run: |
           brew install cocoapods
@@ -115,5 +121,5 @@ jobs:
       - name: Run iOS tests
         run: yarn test
 
-      - name: Build iOS app
-        run: yarn ios
+      - name: Build iOS app with Expo
+        run: expo run:ios
