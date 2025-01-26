@@ -42,6 +42,13 @@ jobs:
           sudo apt-get install -y adb  # Install adb explicitly
           yarn install
 
+      - name: Verify Android SDK installation
+        run: |
+          echo "Listing Android SDK directory contents:"
+          ls -la /usr/lib/android-sdk
+          echo "Listing platform-tools directory contents:"
+          ls -la /usr/lib/android-sdk/platform-tools
+
       - name: Set up React Native environment variables (Android)
         run: |
           echo "export ANDROID_HOME=/usr/lib/android-sdk" >> $GITHUB_ENV
