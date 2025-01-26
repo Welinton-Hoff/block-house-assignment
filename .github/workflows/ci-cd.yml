@@ -66,5 +66,3 @@ jobs:
       - name: Build iOS app
         run: npm run ios # Using Expo to build iOS app
 
-
-  # Optionally, you can add a deployment job if you want to deploy your apps
