@@ -1,6 +1,6 @@
-import eslintPluginReact from "eslint-plugin-react";
+const eslintPluginReact = require("eslint-plugin-react");
 
-export default [
+module.exports = [
   {
     files: ["*.js", "*.jsx", "*.ts", "*.tsx"],
     languageOptions: {
