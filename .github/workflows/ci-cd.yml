@@ -11,7 +11,7 @@ on:
 jobs:
   # Job for linting, testing, and building Android app
   android:
-    runs-on: ubuntu-24.04 # Changed to use ubuntu-24.04 for better compatibility
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
@@ -20,23 +20,33 @@ jobs:
       - name: Set up Node.js (Android)
         uses: actions/setup-node@v3
         with:
-          node-version: "14" # Ensuring the same Node.js version for both Android and iOS
+          node-version: "14"
 
-      - name: Install Java 17 and dependencies (Android)
+      - name: Install Yarn globally (Android)
+        run: |
+          npm install -g yarn
+
+      - name: Install Android SDK and dependencies (Android)
         run: |
           sudo apt-get update
-          sudo apt-get install -y openjdk-17-jdk  # Installing JDK 17 for Android
-          npm install
-          npm run android:install  # Assuming this is your Android install script
+          sudo apt-get install -y openjdk-17-jdk  # Installing JDK 17
+          sudo apt-get install -y android-sdk
+          sudo apt-get install -y gradle
+          yarn install  # Replacing npm with yarn
+
+      - name: Set up React Native environment variables (Android)
+        run: |
+          echo "export ANDROID_HOME=/usr/lib/android-sdk" >> $GITHUB_ENV
+          echo "export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools" >> $GITHUB_ENV
 
       - name: Run Android lint
-        run: npm run lint
+        run: yarn run lint
 
       - name: Run Android tests
-        run: npm test # Running Jest tests
+        run: yarn test
 
       - name: Build Android app
-        run: npm run android # Using Expo to build Android app
+        run: yarn android
 
   # Job for linting, testing, and building iOS app
   ios:
@@ -49,19 +59,23 @@ jobs:
       - name: Set up Node.js (iOS)
         uses: actions/setup-node@v3
         with:
-          node-version: "14" # Ensuring the same Node.js version for both Android and iOS
+          node-version: "14"
+
+      - name: Install Yarn globally (iOS)
+        run: |
+          npm install -g yarn
 
       - name: Install dependencies (iOS)
         run: |
-          brew install cocoapods  # Installing CocoaPods for iOS
-          npm install
+          brew install cocoapods
+          yarn install
           cd ios && pod install && cd ..
 
       - name: Run iOS lint
-        run: npm run lint
+        run: yarn run lint
 
       - name: Run iOS tests
-        run: npm test # Running Jest tests
+        run: yarn test
 
       - name: Build iOS app
-        run: npm run ios # Using Expo to build iOS app
+        run: yarn ios
