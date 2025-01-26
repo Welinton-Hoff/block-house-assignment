@@ -62,6 +62,9 @@ jobs:
       - name: Print PATH for debugging
         run: echo $PATH
 
+      - name: Locate adb
+        run: find / -name adb 2>/dev/null
+
       - name: Verify adb installation
         run: |
           echo "Checking adb version using full path:"
