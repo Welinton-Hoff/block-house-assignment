@@ -46,16 +46,19 @@ jobs:
           sudo apt-get install -y gradle
           sudo apt-get install -y adb
           sudo apt-get install -y qemu-kvm
+          wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip -O commandlinetools.zip
+          unzip commandlinetools.zip -d $ANDROID_HOME/cmdline-tools
+          mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "system-images;android-30;default;x86_64"
           yarn install
 
       - name: Set up Android emulator
         run: |
-          echo "Installing Android emulator and system image..."
-          sdkmanager "system-images;android-30;default;x86_64"
           echo "Creating Android Virtual Device (AVD)..."
-          echo "no" | avdmanager create avd -n test -k "system-images;android-30;default;x86_64" --device "pixel"
+          echo "no" | $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd -n test -k "system-images;android-30;default;x86_64" --device "pixel"
           echo "Starting emulator..."
-          nohup emulator -avd test -no-audio -no-window -gpu swiftshader_indirect &
+          nohup $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -gpu swiftshader_indirect &
 
       - name: Wait for emulator to start
         run: |
@@ -72,7 +75,7 @@ jobs:
       - name: Set up React Native environment variables (Android)
         run: |
           echo "export ANDROID_HOME=/usr/lib/android-sdk" >> $GITHUB_ENV
-          echo "export PATH=$PATH:/usr/lib/android-sdk/tools:/usr/lib/android-sdk/platform-tools" >> $GITHUB_ENV
+          echo "export PATH=$PATH:/usr/lib/android-sdk/cmdline-tools/latest/bin:/usr/lib/android-sdk/platform-tools:/usr/bin" >> $GITHUB_ENV
 
       - name: Print environment variables for debugging
         run: |
