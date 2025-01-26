@@ -44,8 +44,23 @@ jobs:
           sudo apt-get install -y openjdk-17-jdk
           sudo apt-get install -y android-sdk
           sudo apt-get install -y gradle
-          sudo apt-get install -y adb  # Install adb explicitly
+          sudo apt-get install -y adb
+          sudo apt-get install -y qemu-kvm
           yarn install
+
+      - name: Set up Android emulator
+        run: |
+          echo "Installing Android emulator and system image..."
+          sdkmanager "system-images;android-30;default;x86_64"
+          echo "Creating Android Virtual Device (AVD)..."
+          echo "no" | avdmanager create avd -n test -k "system-images;android-30;default;x86_64" --device "pixel"
+          echo "Starting emulator..."
+          nohup emulator -avd test -no-audio -no-window -gpu swiftshader_indirect &
+
+      - name: Wait for emulator to start
+        run: |
+          adb wait-for-device
+          adb shell input keyevent 82
 
       - name: Verify Android SDK installation
         run: |
