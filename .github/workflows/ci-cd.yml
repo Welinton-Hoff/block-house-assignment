@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  # Job for linting, testing, and building Android app
+  # Job for building Android app
   android:
     runs-on: ubuntu-24.04
 
@@ -50,42 +50,13 @@ jobs:
           unzip commandlinetools.zip -d $ANDROID_HOME/cmdline-tools
           mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "system-images;android-30;default;x86_64"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30"
           yarn install
-
-      - name: Set up Android emulator
-        run: |
-          echo "Creating Android Virtual Device (AVD)..."
-          echo "no" | $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd -n test -k "system-images;android-30;default;x86_64" --device "pixel"
-          echo "Starting emulator..."
-          nohup $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -gpu swiftshader_indirect &
-
-      - name: Wait for emulator to start
-        run: |
-          adb wait-for-device
-          adb shell input keyevent 82
-
-      - name: Verify Android SDK installation
-        run: |
-          echo "Listing Android SDK directory contents:"
-          ls -la /usr/lib/android-sdk
-          echo "Listing platform-tools directory contents:"
-          ls -la /usr/lib/android-sdk/platform-tools
 
       - name: Set up React Native environment variables (Android)
         run: |
           echo "export ANDROID_HOME=/usr/lib/android-sdk" >> $GITHUB_ENV
           echo "export PATH=$PATH:/usr/lib/android-sdk/cmdline-tools/latest/bin:/usr/lib/android-sdk/platform-tools:/usr/bin" >> $GITHUB_ENV
-
-      - name: Print environment variables for debugging
-        run: |
-          echo "ANDROID_HOME: $ANDROID_HOME"
-          echo "PATH: $PATH"
-
-      - name: Verify adb installation
-        run: |
-          echo "Checking adb version using /usr/bin/adb:"
-          /usr/bin/adb version || echo "adb not found at /usr/bin"
 
       - name: Run Android lint
         run: yarn run lint
@@ -93,13 +64,10 @@ jobs:
       - name: Run Android tests
         run: yarn test
 
-      - name: Build Android app with Expo
-        env:
-          ANDROID_HOME: /usr/lib/android-sdk
-          PATH: ${{ env.PATH }}:/usr/lib/android-sdk/tools:/usr/lib/android-sdk/platform-tools:/usr/bin
-        run: expo run:android
+      - name: Build Android app
+        run: yarn android:build
 
-  # Job for linting, testing, and building iOS app
+  # Job for building iOS app
   ios:
     runs-on: macos-latest
 
@@ -140,5 +108,5 @@ jobs:
       - name: Run iOS tests
         run: yarn test
 
-      - name: Build iOS app with Expo
-        run: expo run:ios
+      - name: Build iOS app
+        run: yarn ios:build
