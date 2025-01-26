@@ -57,15 +57,12 @@ jobs:
       - name: Set up React Native environment variables (Android)
         run: |
           echo "export ANDROID_HOME=/usr/lib/android-sdk" >> $GITHUB_ENV
-          echo "export PATH=$PATH:/usr/lib/android-sdk/tools:/usr/lib/android-sdk/platform-tools:/usr/bin" >> $GITHUB_ENV
+          echo "export PATH=$PATH:/usr/lib/android-sdk/tools:/usr/lib/android-sdk/platform-tools" >> $GITHUB_ENV
 
       - name: Print environment variables for debugging
         run: |
           echo "ANDROID_HOME: $ANDROID_HOME"
           echo "PATH: $PATH"
-
-      - name: Locate adb
-        run: find / -name adb 2>/dev/null
 
       - name: Verify adb installation
         run: |
@@ -79,6 +76,9 @@ jobs:
         run: yarn test
 
       - name: Build Android app with Expo
+        env:
+          ANDROID_HOME: /usr/lib/android-sdk
+          PATH: ${{ env.PATH }}:/usr/lib/android-sdk/tools:/usr/lib/android-sdk/platform-tools:/usr/bin
         run: expo run:android
 
   # Job for linting, testing, and building iOS app
