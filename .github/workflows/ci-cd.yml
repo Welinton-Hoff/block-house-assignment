@@ -68,6 +68,7 @@ jobs:
         run: |
           echo "Checking adb version using full path:"
           /usr/lib/android-sdk/platform-tools/adb version || /usr/bin/adb version || echo "adb command failed"
+          adb version || echo "adb command not found"
 
       - name: Run Android lint
         run: yarn run lint
