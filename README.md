@@ -8,6 +8,7 @@ This project is a mobile application developed using React Native and Expo. It i
 - [Project Setup](#project-setup)
 - [Running the App](#running-the-app)
 - [Useful Commands](#useful-commands)
+- [CI/CD Integration](#cicd-integration)
 
 ## Dependencies
 
@@ -76,3 +77,35 @@ Follow these steps to set up and run the project locally:
 - **Starting the app**: `yarn start`
 - **Run on Android**: `yarn android`
 - **Run on iOS**: `yarn ios`
+
+## CI/CD Integration
+
+This project integrates GitHub Actions to automate the following processes:
+
+### 1. **Trigger Events**
+   - **Push to master branch**: The pipeline triggers on any push to the `master` branch.
+   - **Pull request to master branch**: The pipeline also triggers on pull requests to the `master` branch.
+
+### 2. **Pipeline Jobs**
+
+- **Android Build**:
+    - **Node.js setup**: Installs Node.js and dependencies.
+    - **Yarn & Expo CLI**: Caches and installs dependencies, updates Expo CLI.
+    - **Android SDK & Emulator Setup**: Installs necessary SDK packages, sets up the emulator, and verifies the environment.
+    - **Build and Run**: Executes linting, testing, and builds the Android app using Expo.
+
+- **iOS Build**:
+    - **Node.js setup**: Installs Node.js and dependencies.
+    - **Yarn & Expo CLI**: Caches and installs dependencies, updates Expo CLI.
+    - **Cocoapods & Dependencies**: Installs iOS dependencies and runs `pod install`.
+    - **Build and Run**: Executes linting, testing, and builds the iOS app using Expo.
+
+### 3. **Tools Used**
+   - **GitHub Actions**: Automates the pipeline.
+   - **Yarn**: Dependency management.
+   - **Expo CLI**: Building and running React Native apps.
+   - **Android SDK**: Provides the necessary tools and dependencies for building Android apps.
+   - **Cocoapods**: Manages iOS dependencies.
+
+### 4. **Configuration File**
+   The CI/CD pipeline is defined in `.github/workflows` as a YAML file. It includes steps for setting up environments, running tests, and building both Android and iOS apps.
