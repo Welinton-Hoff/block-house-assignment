@@ -39,6 +39,7 @@ jobs:
           sudo apt-get install -y openjdk-17-jdk
           sudo apt-get install -y android-sdk
           sudo apt-get install -y gradle
+          sudo apt-get install -y adb  # Install adb explicitly
           yarn install
 
       - name: Set up React Native environment variables (Android)
