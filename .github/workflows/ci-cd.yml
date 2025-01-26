@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node.js (Android)
         uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "18"
 
       - name: Install Yarn globally (Android)
         run: |
@@ -29,10 +29,10 @@ jobs:
       - name: Install Android SDK and dependencies (Android)
         run: |
           sudo apt-get update
-          sudo apt-get install -y openjdk-17-jdk  # Installing JDK 17
+          sudo apt-get install -y openjdk-17-jdk
           sudo apt-get install -y android-sdk
           sudo apt-get install -y gradle
-          yarn install  # Replacing npm with yarn
+          yarn install
 
       - name: Set up React Native environment variables (Android)
         run: |
@@ -59,7 +59,7 @@ jobs:
       - name: Set up Node.js (iOS)
         uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "18"
 
       - name: Install Yarn globally (iOS)
         run: |
@@ -68,7 +68,7 @@ jobs:
       - name: Install dependencies (iOS)
         run: |
           brew install cocoapods
-          yarn install
+          yarn install 
           cd ios && pod install && cd ..
 
       - name: Run iOS lint
