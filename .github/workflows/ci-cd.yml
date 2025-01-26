@@ -11,21 +11,21 @@ on:
 jobs:
   # Job for linting, testing, and building Android app
   android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # Changed to use ubuntu-24.04 for better compatibility
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up Node.js (Android)
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "14" # Ensuring the same Node.js version for both Android and iOS
 
-      - name: Install dependencies (Android)
+      - name: Install Java 17 and dependencies (Android)
         run: |
           sudo apt-get update
-          sudo apt-get install -y openjdk-11-jdk  # Installing JDK for Android
+          sudo apt-get install -y openjdk-17-jdk  # Installing JDK 17 for Android
           npm install
           npm run android:install  # Assuming this is your Android install script
 
@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Node.js (iOS)
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "14" # Ensuring the same Node.js version for both Android and iOS
 
@@ -65,4 +65,3 @@ jobs:
 
       - name: Build iOS app
         run: npm run ios # Using Expo to build iOS app
-
