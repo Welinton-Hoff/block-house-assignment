@@ -1,0 +1,70 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Job for linting, testing, and building Android app
+  android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js (Android)
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14" # Ensuring the same Node.js version for both Android and iOS
+
+      - name: Install dependencies (Android)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-11-jdk  # Installing JDK for Android
+          npm install
+          npm run android:install  # Assuming this is your Android install script
+
+      - name: Run Android lint
+        run: npm run lint
+
+      - name: Run Android tests
+        run: npm test # Running Jest tests
+
+      - name: Build Android app
+        run: npm run android # Using Expo to build Android app
+
+  # Job for linting, testing, and building iOS app
+  ios:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js (iOS)
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14" # Ensuring the same Node.js version for both Android and iOS
+
+      - name: Install dependencies (iOS)
+        run: |
+          brew install cocoapods  # Installing CocoaPods for iOS
+          npm install
+          cd ios && pod install && cd ..
+
+      - name: Run iOS lint
+        run: npm run lint
+
+      - name: Run iOS tests
+        run: npm test # Running Jest tests
+
+      - name: Build iOS app
+        run: npm run ios # Using Expo to build iOS app
+
+
+  # Optionally, you can add a deployment job if you want to deploy your apps
