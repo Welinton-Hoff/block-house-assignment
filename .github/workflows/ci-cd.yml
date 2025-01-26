@@ -47,6 +47,11 @@ jobs:
           sudo apt-get install -y adb  # Install adb explicitly
           yarn install
 
+      - name: Find adb location
+        run: |
+          echo "Searching for adb location:"
+          find / -name adb 2>/dev/null || echo "adb not found"
+
       - name: Verify Android SDK installation
         run: |
           echo "Listing Android SDK directory contents:"
@@ -57,18 +62,18 @@ jobs:
       - name: Set up React Native environment variables (Android)
         run: |
           echo "export ANDROID_HOME=/usr/lib/android-sdk" >> $GITHUB_ENV
-          echo "export PATH=$PATH:/usr/lib/android-sdk/tools:/usr/lib/android-sdk/platform-tools" >> $GITHUB_ENV
+          # Ensure the PATH points to the correct location
+          echo "export PATH=$PATH:/usr/lib/android-sdk/tools:/usr/lib/android-sdk/platform-tools:/usr/bin" >> $GITHUB_ENV
+          echo "ANDROID_HOME is set to $ANDROID_HOME"
 
       - name: Print PATH for debugging
         run: echo $PATH
 
-      - name: Locate adb
-        run: find / -name adb 2>/dev/null
-
       - name: Verify adb installation
         run: |
-          echo "Checking adb version using /usr/bin/adb:"
-          /usr/bin/adb version || echo "adb not found at /usr/bin"
+          echo "Checking adb version using full path:"
+          /usr/lib/android-sdk/platform-tools/adb version || /usr/bin/adb version || echo "adb command failed"
+          adb version || echo "adb command not found"
 
       - name: Run Android lint
         run: yarn run lint
