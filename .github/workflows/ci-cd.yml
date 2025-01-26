@@ -33,8 +33,10 @@ jobs:
       - name: Install Yarn globally (Android)
         run: npm install -g yarn
 
-      - name: Install Expo CLI globally (Android)
-        run: npm install -g expo-cli
+      - name: Uninstall legacy expo-cli and install new Expo CLI (Android)
+        run: |
+          npm uninstall -g expo-cli
+          npm install -g expo@latest
 
       - name: Install Android SDK and dependencies (Android)
         run: |
@@ -106,8 +108,10 @@ jobs:
       - name: Install Yarn globally (iOS)
         run: npm install -g yarn
 
-      - name: Install Expo CLI globally (iOS)
-        run: npm install -g expo-cli
+      - name: Uninstall legacy expo-cli and install new Expo CLI (iOS)
+        run: |
+          npm uninstall -g expo-cli
+          npm install -g expo@latest
 
       - name: Install dependencies (iOS)
         run: |
