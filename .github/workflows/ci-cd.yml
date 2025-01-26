@@ -15,16 +15,23 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Node.js (Android)
         uses: actions/setup-node@v3
         with:
           node-version: "18"
 
+      - name: Cache Node modules (Android)
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       - name: Install Yarn globally (Android)
-        run: |
-          npm install -g yarn
+        run: npm install -g yarn
 
       - name: Install Android SDK and dependencies (Android)
         run: |
@@ -54,16 +61,23 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Node.js (iOS)
         uses: actions/setup-node@v3
         with:
           node-version: "18"
 
+      - name: Cache Node modules (iOS)
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       - name: Install Yarn globally (iOS)
-        run: |
-          npm install -g yarn
+        run: npm install -g yarn
 
       - name: Install dependencies (iOS)
         run: |
