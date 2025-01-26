@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "jsx": "react-native",
+    "paths": { "~*": ["./src"] },
+    "types": ["@types/styled-components-react-native"]
+  },
+  "extends": "expo/tsconfig.base"
+}
